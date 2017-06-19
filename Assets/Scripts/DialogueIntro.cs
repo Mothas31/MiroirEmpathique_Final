@@ -11,9 +11,9 @@ using UnityEngine.SceneManagement;
 
 public class DialogueIntro : MonoBehaviour
 {
-    
-    
-   
+
+
+
     public int etape;
     public Texture Image;
     public string EmotionTest;
@@ -30,32 +30,32 @@ public class DialogueIntro : MonoBehaviour
     public bool Next = false;
     public int Timeractive = 1;
     public bool ordinateur;
-
-  
+    private FaceObject faceObject;
+    
 
     void Start()
     {
 
-
+       
         coolDownTimer = coolDown;
         positionIni = Mask.transform.position;
         position = Mask.transform.position;
 
         gameObject.AddComponent<VIDE_Data>();
 
-      
+
         VIDE_Data.LoadDialogues(); //Load all dialogues to memory so that we dont spend time doing so later
         VIDE_Data.BeginDialogue(GetComponent<VIDE_Assign>());
         Photo = gameObject.GetComponentInChildren<CapturePhotoIntro>(true);
         npcText = gameObject.GetComponentInChildren<Text>(true);
         action = true;
         etape = 0;
-        
+
         npcText.text = "Bonjour";
         etatMask = 0;
 
     }
-   
+
 
     void Update()
     {
@@ -65,8 +65,8 @@ public class DialogueIntro : MonoBehaviour
 
             position.x = position.x + 2;
             this.transform.position = position;
-          //  Debug.Log("Postion en X après changement" + position.x);
-          //  Debug.Log("Postion en X  et Y après changement" + position);
+            //  Debug.Log("Postion en X après changement" + position.x);
+            //  Debug.Log("Postion en X  et Y après changement" + position);
             Mask.transform.position = position;
         }
         else
@@ -74,22 +74,22 @@ public class DialogueIntro : MonoBehaviour
             etatMask = 0;
             Debug.Log("Etat mask" + etatMask);
         }
-       
-     //   Debug.Log("Postion en X Final" + position.x);
-      //  Debug.Log("Postion en X et Y Final " + position);
+
+        //   Debug.Log("Postion en X Final" + position.x);
+        //  Debug.Log("Postion en X et Y Final " + position);
 
 
 
 
 
         if (VIDE_Data.isLoaded) //Only if   
-            {
-            
-                var data = VIDE_Data.nodeData;
+        {
+
+            var data = VIDE_Data.nodeData;
             if (data.currentIsPlayer) // If it's a player node, let's show all of the available options as buttons
             {
 
-               Debug.Log("C'est le joueur");
+                Debug.Log("C'est le joueur");
                 ordinateur = false;
 
                 if (Timeractive == 0)
@@ -101,14 +101,14 @@ public class DialogueIntro : MonoBehaviour
             }
             else
             {
-              
-             Debug.Log("C'est le comput");
+
+                Debug.Log("C'est le comput");
                 ordinateur = true;
                 npcText.text = data.npcComment[data.npcCommentIndex];
                 if (Timeractive == 0)
                 {
 
-                    
+
                     Timeractive = 1;
                 }
 
@@ -123,9 +123,9 @@ public class DialogueIntro : MonoBehaviour
             if (data.isEnd) // If it's the end, let's just call EndDialogue
             {
                 VIDE_Data.EndDialogue();
-                 Debug.Log("Chargement de la scène suivante");
-            SceneManager.LoadScene("MiroirEmpathique", LoadSceneMode.Single);
-               
+                Debug.Log("Chargement de la scène suivante");
+                SceneManager.LoadScene("MiroirEmpathique", LoadSceneMode.Single);
+
 
             }
 
@@ -135,35 +135,35 @@ public class DialogueIntro : MonoBehaviour
 
             }
 
-    }
+        }
 
 
-            // CoolDown party
+        // CoolDown party
 
 
         if (coolDownTimer > 0 && Timeractive == 1)              // Lorsque Le timer est supérieur à 0 et actif
         {
             coolDownTimer -= Time.deltaTime;
-          //  Debug.Log("CoolDown" + coolDownTimer);
+            //  Debug.Log("CoolDown" + coolDownTimer);
         }
 
         if (coolDownTimer < 0 && Timeractive == 1 && ordinateur == true)
         {
-            
+
             coolDownTimer = coolDown;
             VIDE_Data.Next();
             Debug.Log("Timer finis ordi,Next joueur");
-           
+
         }
 
         if (coolDownTimer < 0 && Timeractive == 1 && ordinateur == false)
         {
-           
+
             Debug.Log("Timer finis du joueur");
             Timeractive = 0;
 
         }
-        
+
 
         if (coolDownTimer > 1.5 && coolDownTimer < 1.9 && Timeractive == 1)
         {
@@ -174,8 +174,8 @@ public class DialogueIntro : MonoBehaviour
         {
             position = positionIni;
             Debug.Log("Reposition du mask" + position);
-            
-            
+
+
         }
         // if (GetComponent<VIDE_Assign>().overrideStartNode == 40)
         if (GetComponent<VIDE_Assign>().overrideStartNode == 9)
@@ -184,9 +184,9 @@ public class DialogueIntro : MonoBehaviour
             SceneManager.LoadScene("MiroirEmpathique", LoadSceneMode.Single);
         }
 
-       
+
     }
-        
+
 
 
 
@@ -202,26 +202,26 @@ public class DialogueIntro : MonoBehaviour
         position = positionIni;
     }
 
-    
 
 
 
 
 
+}
 
 
     public class FaceObject
     {
 
-        public string faceRectangle { get; private set; }
+      
         public List<Emotion> emotions { get; private set; }
         public string put2;
 
 
 
-        public FaceObject(string rect, string scorelist)
+        public FaceObject(string scorelist)
         {
-            faceRectangle = rect;
+            
             emotions = ConvertScoresToEmotionDictionary(scorelist);
             string put = GetHighestWeighedEmotion().ToString();
             string put2 = "";
@@ -234,10 +234,10 @@ public class DialogueIntro : MonoBehaviour
                 i++;
                 temp = put[i];
             }
-          
+
             Debug.Log("Highest Emotion:put2 " + put2);
-            ChoixEmotion(put2);
-         
+           // ChoixEmotion(put2);
+
 
         }
         /// <summary>
@@ -294,7 +294,7 @@ public class DialogueIntro : MonoBehaviour
         public void ChoixEmotion(string put2)
         {
             Debug.Log("Emotion à envoyer =" + put2);
-           
+
             if (VIDE_Data.isLoaded)
             {
                 Debug.Log("Vide data is loaded");
@@ -309,20 +309,21 @@ public class DialogueIntro : MonoBehaviour
                     Debug.Log("Emotion change next =" + put2);
                     VIDE_Data.Next();
 
+
                 }
                 if (put2 == "contempt ")
                 {
                     data.selectedOption = 0;
                     Debug.Log("Emotion change next =" + put2);
                     VIDE_Data.Next();
-                 //   npcText.text = data.npcComment[data.npcCommentIndex];
+                    //   npcText.text = data.npcComment[data.npcCommentIndex];
 
                 }
                 if (put2 == "disgust ")
                 {
                     data.selectedOption = 5;
                     Debug.Log("Emotion change next =" + put2);
-                   
+
                     VIDE_Data.Next();
 
                 }
@@ -331,7 +332,7 @@ public class DialogueIntro : MonoBehaviour
                     data.selectedOption = 1;
                     Debug.Log("Emotion =" + put2);
                     VIDE_Data.Next();
-                 
+
 
                 }
                 if (put2 == "happiness ")
@@ -339,17 +340,14 @@ public class DialogueIntro : MonoBehaviour
                     data.selectedOption = 0;
                     Debug.Log("Emotion =" + put2);
                     VIDE_Data.Next();
-                   
-
-
                 }
                 if (put2 == "neutral ")
                 {
                     data.selectedOption = 4;
                     Debug.Log("Emotion change next =" + put2);
-                 
+
                     VIDE_Data.Next();
-                  //  npcText.text = data.npcComment[data.npcCommentIndex];
+                    //  npcText.text = data.npcComment[data.npcCommentIndex];
 
                 }
                 if (put2 == "sadness ")
@@ -357,7 +355,7 @@ public class DialogueIntro : MonoBehaviour
                     data.selectedOption = 3;
                     Debug.Log("Emotion =" + put2);
                     VIDE_Data.Next();
-                  //  npcText.text = data.npcComment[data.npcCommentIndex];
+                    //  npcText.text = data.npcComment[data.npcCommentIndex];
 
                 }
                 if (put2 == "surprise ")
@@ -387,7 +385,7 @@ public class DialogueIntro : MonoBehaviour
 
             // gameObject.GetComponentInParent<Dialogue>().SendMessage("ChoixEmotion", put2);
         }
-       
+
 
     }
 
@@ -419,7 +417,4 @@ public class DialogueIntro : MonoBehaviour
    
 
 
-
-
-}
 

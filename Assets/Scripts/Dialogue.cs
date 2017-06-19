@@ -9,6 +9,14 @@ using System.IO;
 
 public class Dialogue : MonoBehaviour
 {
+    static private Dialogue _dialogue;
+    static public Dialogue dialogue
+    {
+        get
+        {
+            return _dialogue;
+        }
+    }
     public static int yolo = 3;
     public Timer timer;
     public float cooldown = 1;
@@ -23,6 +31,14 @@ public class Dialogue : MonoBehaviour
     public int newItem;
     public bool action;
     public CoolDown CoolDown;
+
+
+    void Awake()
+    {
+        _dialogue = this;
+       
+    }
+
 
     void Start()
     {
